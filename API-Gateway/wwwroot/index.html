@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогресс выполнения задач</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🚀 Прогресс выполнения задач</h1>
+        <div id="connectionStatus" class="connection-status disconnected">Disconnected</div>
+    </div>
+
+    <div class="controls">
+        <div class="input-group">
+            <input type="text" id="taskIdInput" placeholder="Enter Task ID (e.g., task-123)" />
+            <button id="subscribeBtn" class="btn-primary" disabled>Subscribe</button>
+            <button id="unsubscribeBtn" class="btn-secondary" disabled>Unsubscribe</button>
+        </div>
+        <div class="input-group">
+            <button id="connectBtn" class="btn-primary">Connect</button>
+            <button id="disconnectBtn" class="btn-secondary" disabled>Disconnect</button>
+            <button id="clearLogsBtn" class="btn-danger">Clear Logs</button>
+        </div>
+    </div>
+
+    <div class="tasks-container">
+        <div id="tasksList">
+        </div>
+    </div>
+
+    <div class="logs">
+        <div id="logsContainer"></div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+<script src="./js/tasks.js"></script>
+</body>
+</html>

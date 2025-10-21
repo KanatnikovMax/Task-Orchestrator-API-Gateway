@@ -1,15 +1,18 @@
 ﻿using API_Gateway.Realtime.ClientInterfaces;
+using API_Gateway.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
 namespace API_Gateway.Realtime.Hubs;
 
-internal sealed class TaskProgressHub(ILogger<TaskProgressHub> logger) : Hub<ITaskProgressClient>
+internal sealed class TaskProgressHub(
+    ITaskProgressService taskProgressService,
+    ILogger<TaskProgressHub> logger) : Hub<ITaskProgressClient>
 {
     // Workers Service Method
     public async Task UpdateWorkerTaskProgress(string taskId, int progress)
     {
         logger.LogInformation($"UpdateWorkerTaskProgress: {taskId}, {progress}%");
-        
+        await taskProgressService.UpdateProgressAsync(taskId, progress);
         await Clients.Group($"task-{taskId}").UpdateProgress(taskId, progress);
     }
 
@@ -18,7 +21,8 @@ internal sealed class TaskProgressHub(ILogger<TaskProgressHub> logger) : Hub<ITa
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, $"task-{taskId}");
         
-        await Clients.Group($"task-{taskId}").UpdateProgress(taskId, 0);
+        var currentProgress = await taskProgressService.GetProgressAsync(taskId) ?? 0;
+        await Clients.Caller.UpdateProgress(taskId, currentProgress);
         
         logger.LogInformation($"SubscribeToTask {taskId}");
     }
