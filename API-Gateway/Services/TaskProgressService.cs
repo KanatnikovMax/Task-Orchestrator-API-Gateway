@@ -6,7 +6,7 @@ namespace API_Gateway.Services;
 public class TaskProgressService : ITaskProgressService
 {
     private static readonly TimeSpan CacheAbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
-    private static readonly TimeSpan CacheASlidingExpiration = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan CacheSlidingExpiration = TimeSpan.FromSeconds(30);
 
     private readonly IMemoryCache _memoryCache;
     private readonly MemoryCacheEntryOptions _cacheOptions;
@@ -19,7 +19,7 @@ public class TaskProgressService : ITaskProgressService
         _cacheOptions = new MemoryCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = CacheAbsoluteExpirationRelativeToNow,
-            SlidingExpiration = CacheASlidingExpiration,
+            SlidingExpiration = CacheSlidingExpiration,
         };
     }
 

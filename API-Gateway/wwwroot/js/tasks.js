@@ -86,7 +86,6 @@ class TaskProgressMonitor {
     async disconnect() {
         if (this.connection) {
             try {
-                // Unsubscribe from all tasks first
                 for (const taskId of this.subscribedTasks.keys()) {
                     await this.unsubscribeFromTask(taskId, false);
                 }
