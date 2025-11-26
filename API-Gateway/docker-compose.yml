@@ -1,0 +1,30 @@
+﻿version: "3.9"
+
+services:
+  api-gateway:
+    container_name: api-gateway
+    image: progress_hub_api_gateway:latest
+    ports:
+      - "5095:5095"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:5095
+    networks:
+      - backend
+
+  workers-service:
+    container_name: workers-service
+    image: workers_service:latest
+    depends_on:
+      - api-gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:5208
+    ports:
+      - "5208:5208"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
