@@ -1,5 +1,5 @@
 class TaskProgressMonitor {
-    taskProgressHub = 'http://localhost:5095/hubs/task-progress';
+    taskProgressHub = '/hubs/task-progress';
     constructor() {
         this.connection = null;
         this.subscribedTasks = new Map();

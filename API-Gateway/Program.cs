@@ -15,6 +15,18 @@ builder.Services.AddTaskProgressService();
 
 builder.Services.AddControllers();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["Redis__Connection"] ?? "redis:6379";
+});
+
+var redisConnection = builder.Configuration["Redis:Connection"] ?? builder.Configuration["Redis__Connection"];
+builder.Services.AddSignalR()
+    .AddStackExchangeRedis(redisConnection!, options =>
+    {
+        options.Configuration.ChannelPrefix = "SignalR";
+    });
+
 builder.Services.AddSignalR();
 
 var app = builder.Build();
@@ -37,6 +49,6 @@ app.MapGet("/{id}", async (string id) =>
     await client.GetAsync(id);
 });
 
-app.MapGet("/status", () => Results.Ok(new { Environment.MachineName, Environment.ProcessId, DateTime.Now, DateTime = DateTime.UtcNow, }));
+app.MapGet("/status", () => Results.Ok(new { Environment.MachineName, Environment.ProcessId, DateTime.Now, }));
 
 app.Run();

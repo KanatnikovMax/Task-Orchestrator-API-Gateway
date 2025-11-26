@@ -1,19 +1,28 @@
 ﻿version: "3.9"
 
 services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - backend
+    
   api-gateway:
-    container_name: api-gateway
     image: progress_hub_api_gateway:latest
-    ports:
-      - "5095:5095"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://0.0.0.0:5095
+    depends_on:
+      - redis
+    expose:
+      - "5095"
+    restart: unless-stopped
+    deploy:
+      replicas: 3
     networks:
       - backend
 
   workers-service:
-    container_name: workers-service
     image: workers_service:latest
     depends_on:
       - api-gateway
@@ -22,9 +31,22 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5208
     ports:
       - "5208:5208"
+    restart: unless-stopped
     networks:
       - backend
-
+  
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "5095:80"   
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - backend
+    depends_on:
+      - api-gateway
+    restart: unless-stopped
+    
 networks:
   backend:
     driver: bridge
