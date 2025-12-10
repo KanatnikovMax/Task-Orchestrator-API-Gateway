@@ -30,11 +30,7 @@ public class TaskProgressService : ITaskProgressService
         {
             var key = $"task_progress_{taskId}";
             var bytes = BitConverter.GetBytes(progress);
-            await _cache.SetAsync(key, bytes, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
-                SlidingExpiration = TimeSpan.FromSeconds(30)
-            });
+            await _cache.SetAsync(key, bytes, _cacheOptions);
         }
         catch (Exception ex)
         {
