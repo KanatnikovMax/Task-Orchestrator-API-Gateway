@@ -51,10 +51,4 @@ app.MapControllers();
 app.MapHub<TaskProgressHub>("/hubs/task-progress");
 
 app.MapGet("/status", () => Results.Ok(new { Environment.MachineName, }));
-app.MapGet("/check", async () =>
-{
-    var client = new HttpClient();
-    client.BaseAddress = new Uri("http://workers-service:5208");
-    await client.GetAsync("/check");
-});
 app.Run();
