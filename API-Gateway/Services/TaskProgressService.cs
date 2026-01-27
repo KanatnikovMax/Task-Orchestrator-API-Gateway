@@ -1,6 +1,5 @@
 ﻿using API_Gateway.Services.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace API_Gateway.Services;
 

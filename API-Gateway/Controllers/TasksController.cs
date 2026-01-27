@@ -12,12 +12,18 @@ public class TasksController(
     ITasksProducer kafkaProducer,
     ITaskWorkerService workerService) : ControllerBase
 {
+    /// <summary>
+    /// Кладёт в kafka сообщение для создания задачи
+    /// </summary>
+    /// <param name="request">Метаданные задачи</param>
+    /// <param name="cancellationToken">cancellation token</param>
     [HttpPost]
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
+        {
             return BadRequest(ModelState);
-
+        }
         var task = new KafkaTaskRequest
         {
             TaskId = request.TaskName,
@@ -35,6 +41,11 @@ public class TasksController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Запускает задачу
+    /// </summary>
+    /// <param name="taskId">Идентификатор задачи</param>
+    /// <param name="cancellationToken">cancellation token</param>
     [HttpPost("{taskId}")]
     public async Task<IActionResult> ProcessTask(string taskId, CancellationToken cancellationToken)
     {
