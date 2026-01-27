@@ -1,4 +1,5 @@
-﻿using API_Gateway.Models;
+﻿using API_Gateway.Grpc.Interfaces;
+using API_Gateway.Models;
 using API_Gateway.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,8 @@ namespace API_Gateway.Controllers;
 [Route("api/[controller]")]
 public class TasksController(
     ILogger<TasksController> logger, 
-    ITasksProducer kafkaProducer) : ControllerBase
+    ITasksProducer kafkaProducer,
+    ITaskWorkerService workerService) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request, CancellationToken cancellationToken)
@@ -36,9 +38,7 @@ public class TasksController(
     [HttpPost("{taskId}")]
     public async Task<IActionResult> ProcessTask(string taskId, CancellationToken cancellationToken)
     {
-        var client = new HttpClient();
-        client.BaseAddress = new Uri("http://workers-service:5208");
-        await client.GetAsync(taskId, cancellationToken);
+        await workerService.ProcessTaskAsync(taskId, cancellationToken);
         
         return Ok();
     }

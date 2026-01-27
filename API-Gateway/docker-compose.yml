@@ -10,7 +10,7 @@ services:
       - "6379:6379"
     networks:
       - backend
-  
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
     environment:
@@ -65,8 +65,9 @@ services:
     image: progress_hub_api_gateway:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://0.0.0.0:5095
+      - ASPNETCORE_URLS=http://+:5095
     depends_on:
+      - workers-service
       - redis
       - kafka
     expose:
@@ -82,8 +83,6 @@ services:
     depends_on:
       postgres-workers:
         condition: service_healthy
-      api-gateway:
-        condition: service_started
       kafka:
         condition: service_started
     environment:

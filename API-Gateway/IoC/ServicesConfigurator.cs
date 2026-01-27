@@ -1,4 +1,6 @@
-﻿using API_Gateway.Options;
+﻿using API_Gateway.Grpc;
+using API_Gateway.Grpc.Interfaces;
+using API_Gateway.Options;
 using API_Gateway.Services;
 using API_Gateway.Services.Interfaces;
 
@@ -20,5 +22,12 @@ internal static class ServicesConfigurator
         builder.Services.AddSingleton<ITasksProducer, TasksProducer>();
         
         return builder;
+    }
+
+    public static IServiceCollection AddTaskWorkerService(this IServiceCollection services)
+    {
+        services.AddScoped<ITaskWorkerService, TaskWorkerService>();
+        
+        return services;
     }
 }

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "WorkersService.Grpc";
+
+package taskworker;
+
+service TaskWorkerService {
+  rpc ProcessTask (ProcessTaskRequest) returns (ProcessTaskResponse);
+}
+
+message ProcessTaskRequest {
+  string task_id = 1;
+}
+
+message ProcessTaskResponse {
+  bool accepted = 1;
+}
